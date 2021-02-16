@@ -25,6 +25,25 @@ THE SOFTWARE.
 
 #include <cstdint>
 
+// FIXME: make itoa work on big endian machines
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#include <cstdio>
+class Itoa {
+public:
+    static char* u32toa_sse2(uint32_t value, char* buffer) {
+        return buffer + sprintf(buffer, "%d", value) + 1;
+    }
+    static char* i32toa_sse2(int32_t value, char* buffer) {
+        return buffer + sprintf(buffer, "%d", value) + 1;
+    }
+    static char* u64toa_sse2(uint64_t value, char* buffer) {
+        return buffer + sprintf(buffer, "%zu", value) + 1;
+    }
+    static char* i64toa_sse2(uint64_t value, char* buffer) {
+        return buffer + sprintf(buffer, "%zu", value) + 1;
+    }
+};
+#else
 #define SIMDE_ENABLE_NATIVE_ALIASES
 #include <simde/x86/sse2.h>
 
@@ -308,4 +327,5 @@ public:
 
 #pragma GCC diagnostic pop
 
+#endif
 #endif

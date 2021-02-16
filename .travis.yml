@@ -36,6 +36,16 @@ jobs:
   - addons:
       apt:
         packages:
+          - *default_packages
+          - build-essential
+          - g++-8
+          - gcc-8
+    arch: s390x
+    dist: bionic
+    env: CC=gcc-8 CXX=g++-8 MMSEQS_NUM_THREADS=4
+  - addons:
+      apt:
+        packages:
         - *default_packages
         - clang-5.0
         - libc++-dev
