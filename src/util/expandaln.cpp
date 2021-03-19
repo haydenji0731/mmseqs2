@@ -257,6 +257,7 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                         size_t cSeqId = cReader->getId(cSeqKey);
                         cSeq.mapSequence(cSeqId, cSeqKey, cReader->getData(cSeqId, thread_idx), cReader->getSeqLen(cSeqId));
                         rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
+                       // this should be INT_MIN in the case of slice search -> yields a better score
                         if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
                             continue;
                         }

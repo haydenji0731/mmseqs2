@@ -79,7 +79,7 @@ Matcher::result_t Matcher::getSWResult(Sequence* dbSeq, const int diagonal, bool
             alignment = aligner->ssw_align(dbSeq->numSequence, dbSeq->numConsensusSequence,
                                            dbSeq->getAlignmentProfile(), dbSeq->L, backtrace,
                                            gapOpen, gapExtend, alignmentMode, evalThr, evaluer, covMode,
-                                           covThr, correlationScoreWeight, maskLen, dbSeq->getId(), false);
+                                           covThr, correlationScoreWeight, maskLen, dbSeq->getId());
         } else {
             alignment = aligner->scoreIdentical(dbSeq->numSequence, dbSeq->L, evaluer, alignmentMode, backtrace);
         }

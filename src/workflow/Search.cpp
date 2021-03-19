@@ -32,11 +32,11 @@ void setSearchDefaults(Parameters *p) {
 
 int computeSearchMode(int queryDbType, int targetDbType, int targetSrcDbType, int searchType) {
     // reject unvalid search
-    if (Parameters::isEqualDbtype(queryDbType, Parameters::DBTYPE_HMM_PROFILE) &&
-        Parameters::isEqualDbtype(targetDbType,Parameters::DBTYPE_HMM_PROFILE)) {
-        Debug(Debug::ERROR) << "Profile-Profile searches are not supported.\n";
-        EXIT(EXIT_FAILURE);
-    }
+//    if (Parameters::isEqualDbtype(queryDbType, Parameters::DBTYPE_HMM_PROFILE) &&
+//        Parameters::isEqualDbtype(targetDbType,Parameters::DBTYPE_HMM_PROFILE)) {
+//        Debug(Debug::ERROR) << "Profile-Profile searches are not supported.\n";
+//        EXIT(EXIT_FAILURE);
+//    }
     // index was used
     if(targetSrcDbType == -1) {
         if(Parameters::isEqualDbtype(queryDbType, Parameters::DBTYPE_NUCLEOTIDES) &&
@@ -361,28 +361,28 @@ int search(int argc, const char **argv, const Command& command) {
         par.exhaustiveSearch = true;
         int originalNumIterations = par.numIterations;
         par.numIterations = 1;
-//        par.realign = true;
-        // slice-search evalThr must be set as the minimum val between evalThr and evalProfile
-        // evalThr set as 1000 for regression / benchmark purposes
-        // TODO: recommend that evalThr = 1000, evalProfile = 0.1
-        // default for evalThr = 0.001; evalProfile = 0.1
+        // used to expand alignment results
         par.addBacktrace = true;
         cmd.addVariable("SEARCH_PAR", par.createParameterString(par.searchworkflow).c_str());
-        int originalEval = par.evalThr;
-        par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
         par.numIterations = originalNumIterations;
         cmd.addVariable("NUM_IT", SSTR(par.numIterations).c_str());
         cmd.addVariable("SUBTRACT_PAR", par.createParameterString(par.subtractdbs).c_str());
+        cmd.addVariable("MERGE_PAR", par.createParameterString(par.mergedbs).c_str());
         cmd.addVariable("VERBOSITY_PAR", par.createParameterString(par.onlyverbosity).c_str());
-        // set the pcmode at context-specific
-        par.pcmode = 1;
-        // TODO: is this right? or efficient?
-        cmd.addVariable("EXPAND_PAR", par.createParameterString(par.expand2profile).c_str());
         cmd.addVariable("CONSENSUS_PAR", par.createParameterString(par.profile2seq).c_str());
+
+        int originalEval = par.evalThr;
+        par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
+        cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
+        par.pcmode = 1;
+        cmd.addVariable("RESULT2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
         for (int i = 1; i < par.numIterations; i++) {
-//            par.realign = false;
+            // setting realign to false is good, good thing
             if (i == (par.numIterations - 1)) {
                 par.evalThr = originalEval;
+                // expandaln par to use on the last iteration (original eVal used; higher one)
+                par.pcmode = 0;
+                cmd.addVariable("EXPANDALN_PAR_LAST", par.createParameterString(par.expandaln).c_str());
             }
             cmd.addVariable(std::string("PREFILTER_PAR_" + SSTR(i)).c_str(),
                             par.createParameterString(par.prefilter).c_str());
@@ -393,12 +393,7 @@ int search(int argc, const char **argv, const Command& command) {
                 par.rescoreMode = originalRescoreMode;
             } else {
                 cmd.addVariable(std::string("ALIGNMENT_PAR_" + SSTR(i)).c_str(),
-                        par.createParameterString(par.align).c_str());
-            }
-            cmd.addVariable(std::string("EXPANDPROFILE_PAR_" + SSTR(i)).c_str(),
-                            par.createParameterString(par.expand2profile).c_str());
-            if (i == (par.numIterations - 1)) {
-                cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
+                                par.createParameterString(par.align).c_str());
             }
         }
         FileUtil::writeFile(tmpDir + "/iterativepp.sh", iterativepp_sh, iterativepp_sh_len);
