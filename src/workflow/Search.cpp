@@ -373,6 +373,7 @@ int search(int argc, const char **argv, const Command& command) {
 
         int originalEval = par.evalThr;
         par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
+        // expandaln + result2profile both uses 0.001
         cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
         par.pcmode = 1;
         cmd.addVariable("RESULT2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());

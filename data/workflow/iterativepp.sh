@@ -27,7 +27,7 @@ TARGETDB="$2"
 TMP_PATH="$4"
 STEP=0
 
-while [ $STEP -lt "$NUM_IT" ]; do
+while [ $STEP -lt $NUM_IT ]; do
   # call slice search for the first iteration
   if [ $STEP -eq 0 ]; then
     # shellcheck disable=SC2086
@@ -46,6 +46,7 @@ while [ $STEP -lt "$NUM_IT" ]; do
       $RUNNER "$MMSEQS" prefilter "$QUERYDB" "$TARGETDB" "$TMP_PATH/pref_tmp_$STEP" ${TMP} \
         || fail "Prefilter died"
     STEPPREV=$((STEP-1))
+    # shellcheck disable=SC2086
     "$MMSEQS" subtractdbs "$TMP_PATH/pref_tmp_$STEP" "$TMP_PATH/aln_$STEPPREV" "$TMP_PATH/pref_$STEP" $SUBTRACT_PAR \
       || fail "Subtract died"
     "$MMSEQS" rmdb "$TMP_PATH/pref_tmp_$STEP"
@@ -64,10 +65,11 @@ while [ $STEP -lt "$NUM_IT" ]; do
   fi
   # expand alignment dbs
   # targetdb has to be a full set!
-  if [ $STEP -ne $(($NUM_IT - 1)) ]; then
+  if [ $STEP -ne ($NUM_IT - 1) ]; then
     # shellcheck disable=SC2086
     "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/aln_expand_$STEP" $EXPANDALN_PAR \
       || fail 'Expandaln died'
+    # shellcheck disable=SC2086
     "$MMSEQS" result2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_expand_$STEP" "$TMP_PATH/profile_$STEP" $RESULT2PROFILE_PAR \
       || fail 'result2Profile died'
   else

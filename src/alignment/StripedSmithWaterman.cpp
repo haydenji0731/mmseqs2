@@ -289,7 +289,8 @@ s_align SmithWaterman::ssw_align (
     } else if (isQueryProfile && !isTargetProfile) {
 //        std::cout << "aligning!";
         alignment = ssw_align_private<SmithWaterman::PROFILE_SEQ>(db_num_sequence, db_mat, db_length, backtrace, gap_open,
-                                                                  gap_extend, alignmentMode, evalueThr, evaluer, covMode, covThr, correlationScoreWeight, maskLen, id, true);
+                                                                  gap_extend, alignmentMode, evalueThr, evaluer, covMode, covThr, correlationScoreWeight, maskLen, id,
+                                                                  true);
     } else if (!isQueryProfile && isTargetProfile) {
         alignment = ssw_align_private<SmithWaterman::SEQ_PROFILE>(db_num_sequence, db_mat, db_length, backtrace, gap_open,
                                                                   gap_extend, alignmentMode, evalueThr, evaluer, covMode, covThr, correlationScoreWeight, maskLen, id, false);
