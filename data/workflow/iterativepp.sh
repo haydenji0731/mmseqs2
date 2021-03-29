@@ -65,7 +65,7 @@ while [ $STEP -lt $NUM_IT ]; do
   fi
   # expand alignment dbs
   # targetdb has to be a full set!
-  if [ $STEP -ne ($NUM_IT - 1) ]; then
+  if [ $STEP -ne $($NUM_IT - 1) ]; then
     # shellcheck disable=SC2086
     "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/aln_expand_$STEP" $EXPANDALN_PAR \
       || fail 'Expandaln died'
