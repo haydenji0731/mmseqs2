@@ -84,7 +84,8 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
     Parameters &par = Parameters::getInstance();
     // default for expand2profile to filter MSA
     par.filterMsa = 1;
-    par.parseParameters(argc, argv, command, true, 0, 0);
+    par.parseParameters(argc, argv, command, true,
+                        0, 0);
     DBReader<unsigned int> aReader(par.db1.c_str(), par.db1Index.c_str(), par.threads, DBReader<unsigned int>::USE_INDEX | DBReader<unsigned int>::USE_DATA);
     aReader.open(DBReader<unsigned int>::NOSORT);
     const int aSeqDbType = aReader.getDbtype();
@@ -166,10 +167,11 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                 filter = new MsaFilter(par.maxSeqLen, 300, &subMat, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
             }
             // TODO: is this right?
-            calculator = new PSSMCalculator(&subMat, par.maxSeqLen, 300, par.pcmode, par.pca, par.pcb, 0, 0);
+            calculator = new PSSMCalculator(&subMat, par.maxSeqLen, 300, par.pcmode, par.pca, par.pcb, par.gapOpen.values.aminoacid(), par.gapPseudoCount);
             masker = new PSSMMasker(par.maxSeqLen, *probMatrix, subMat);
             seqSet.reserve(300);
-            result.reserve(par.maxSeqLen * Sequence::PROFILE_READIN_SIZE);
+            // changed
+            result.reserve((par.maxSeqLen + 1) * Sequence::PROFILE_READIN_SIZE);
         }
 
         size_t compBufferSize = (par.maxSeqLen + 1) * sizeof(float);
