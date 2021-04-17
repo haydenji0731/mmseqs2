@@ -67,15 +67,18 @@ while [ $STEP -lt "$NUM_IT" ]; do
   # targetdb has to be a full set!
   if [ $STEP -ne $((NUM_IT - 1)) ]; then
     # shellcheck disable=SC2086
-    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/aln_expand_$STEP" $EXPANDALN_PAR \
-      || fail 'Expandaln died'
-    # shellcheck disable=SC2086
-    "$MMSEQS" result2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_expand_$STEP" "$TMP_PATH/profile_$STEP" $RESULT2PROFILE_PAR \
-      || fail 'result2Profile died'
+    "$MMSEQS" expand2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/profile_$STEP" $EXPANDPROFILE_PAR \
+      || fail 'Expand2Profile died'
+#    # shellcheck disable=SC2086
+#    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/aln_expand_$STEP" $EXPANDALN_PAR \
+#      || fail 'Expandaln died'
+#    # shellcheck disable=SC2086
+#    "$MMSEQS" result2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_expand_$STEP" "$TMP_PATH/profile_$STEP" $RESULT2PROFILE_PAR \
+#      || fail 'result2Profile died'
   else
 #    PARAM="EXPANDALN_PAR"
     # shellcheck disable=SC2086
-    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$3" $EXPANDALN_PAR_LAST \
+    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$3" $EXPANDALN \
       || fail "Expandaln died"
   fi
   QUERYDB="$TMP_PATH/profile_$STEP"

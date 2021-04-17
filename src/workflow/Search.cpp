@@ -370,20 +370,18 @@ int search(int argc, const char **argv, const Command& command) {
         cmd.addVariable("MERGE_PAR", par.createParameterString(par.mergedbs).c_str());
         cmd.addVariable("VERBOSITY_PAR", par.createParameterString(par.onlyverbosity).c_str());
         cmd.addVariable("CONSENSUS_PAR", par.createParameterString(par.profile2seq).c_str());
-
+        cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
         int originalEval = par.evalThr;
         par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
-        // expandaln + result2profile both uses 0.001
-        cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
         par.pcmode = 1;
-        cmd.addVariable("RESULT2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
+        cmd.addVariable("EXPAND2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
         for (int i = 1; i < par.numIterations; i++) {
             // setting realign to false is good, good thing
             if (i == (par.numIterations - 1)) {
                 par.evalThr = originalEval;
                 // expandaln par to use on the last iteration (original eVal used; higher one)
-                par.pcmode = 0;
-                cmd.addVariable("EXPANDALN_PAR_LAST", par.createParameterString(par.expandaln).c_str());
+//                par.pcmode = 0;
+//                cmd.addVariable("EXPANDALN_PAR_LAST", par.createParameterString(par.expandaln).c_str());
             }
             cmd.addVariable(std::string("PREFILTER_PAR_" + SSTR(i)).c_str(),
                             par.createParameterString(par.prefilter).c_str());
