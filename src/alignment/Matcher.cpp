@@ -75,7 +75,6 @@ Matcher::result_t Matcher::getSWResult(Sequence* dbSeq, const int diagonal, bool
         alignmentMode = Matcher::SCORE_COV_SEQID;
     } else {
         if (isIdentity == false) {
-            // gpmode set as false for now
             alignment = aligner->ssw_align(dbSeq->numSequence, dbSeq->numConsensusSequence,
                                            dbSeq->getAlignmentProfile(), dbSeq->L, backtrace,
                                            gapOpen, gapExtend, alignmentMode, evalThr, evaluer, covMode,

@@ -260,18 +260,18 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                         cSeq.mapSequence(cSeqId, cSeqKey, cReader->getData(cSeqId, thread_idx), cReader->getSeqLen(cSeqId));
                         rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
                        // this should be INT_MIN in the case of slice search -> yields a better score
-                       if (returnAlnRes) {
-                           if (resultAc.score < INT_MIN) {
-                               continue;
-                           }
-                       } else {
-                           if (resultAc.score < -6) {
-                               continue;
-                           }
-                       }
-//                        if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
-//                            continue;
-//                        }
+//                       if (returnAlnRes) {
+//                           if (resultAc.score < INT_MIN) {
+//                               continue;
+//                           }
+//                       } else {
+//                           if (resultAc.score < -6) {
+//                               continue;
+//                           }
+//                       }
+                        if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
+                            continue;
+                        }
 
                         if(par.expansionMode == Parameters::EXPAND_RESCORE_BACKTRACE){
                             resultAc.eval = evaluer->computeEvalue(resultAc.score, aSeq.L);

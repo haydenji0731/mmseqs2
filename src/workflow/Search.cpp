@@ -371,10 +371,11 @@ int search(int argc, const char **argv, const Command& command) {
         cmd.addVariable("VERBOSITY_PAR", par.createParameterString(par.onlyverbosity).c_str());
         cmd.addVariable("CONSENSUS_PAR", par.createParameterString(par.profile2seq).c_str());
         cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
+        // only loads e-profile val; NOT e-val
+        par.pcmode = 0;
+        cmd.addVariable("EXPAND2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
         int originalEval = par.evalThr;
         par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
-        par.pcmode = 1;
-        cmd.addVariable("EXPAND2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
         for (int i = 1; i < par.numIterations; i++) {
             // setting realign to false is good, good thing
             if (i == (par.numIterations - 1)) {
