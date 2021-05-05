@@ -1,3 +1,5 @@
+kind: pipeline
+
 container:
   image: debian:testing-slim
 
