@@ -1,0 +1,14 @@
+container:
+  image: debian:testing-slim
+
+task:
+  name: Run ARM64
+  install_dependencies:
+    - apt-get update
+    - apt-get install -y build-essential cmake
+    - pip3 install meson
+  build:
+    - mkdir build
+    - cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j $(nproc --all)
+  test:
+    - ./util/regression/run_regression.sh ./build/src/mmseqs SCRATCH
