@@ -1,16 +1,20 @@
 kind: pipeline
+type: docker
+name: linux-arm64
 
-container:
+platform:
+  arch: arm64
+  os: linux
+
+clone:
+  depth: 50
+
+steps:
+- name: build
   image: debian:testing-slim
-
-task:
-  name: Run ARM64
-  install_dependencies:
-    - apt-get update
-    - apt-get install -y build-essential cmake
-    - pip3 install meson
-  build:
-    - mkdir build
-    - cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j $(nproc --all)
-  test:
-    - ./util/regression/run_regression.sh ./build/src/mmseqs SCRATCH
+  commands:
+  - apt-get update
+  - apt-get install -y build-essential cmake
+  - mkdir build
+  - (cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j $(nproc --all))
+  - ./util/regression/run_regression.sh ./build/src/mmseqs SCRATCH
