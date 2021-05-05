@@ -10,9 +10,9 @@ steps:
 - name: build
   image: debian:testing-slim
   commands:
-  - git submodule update --init
   - apt-get update
-  - apt-get install -y build-essential cmake
+  - apt-get install -y build-essential cmake git
+  - git submodule update --init
   - mkdir build
   - (cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j $(nproc --all))
   - ./util/regression/run_regression.sh ./build/src/mmseqs SCRATCH
