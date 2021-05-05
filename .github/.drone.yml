@@ -6,13 +6,11 @@ platform:
   arch: arm64
   os: linux
 
-clone:
-  depth: 50
-
 steps:
 - name: build
   image: debian:testing-slim
   commands:
+  - git submodule update --init
   - apt-get update
   - apt-get install -y build-essential cmake
   - mkdir build
