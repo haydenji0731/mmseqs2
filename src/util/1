@@ -230,7 +230,7 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                     Matcher::readAlignmentResults(resultsBc, resultBcReader.getData(bResId, thread_idx), false);
                 }
 
-                //std::stable_sort(resultsBc.begin(), resultsBc.end(), compareHitsByKeyScore);
+                std::stable_sort(resultsBc.begin(), resultsBc.end(), compareHitsByKeyScore);
 
                 for (size_t k = 0; k < resultsBc.size(); ++k) {
                     Matcher::result_t &resultBc = resultsBc[k];
@@ -314,7 +314,7 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
             interval.clear();
 
             if (returnAlnRes) {
-                //SORT_SERIAL(resultsAc.begin(), resultsAc.end(), Matcher::compareHits);
+                SORT_SERIAL(resultsAc.begin(), resultsAc.end(), Matcher::compareHits);
                 writer.writeStart(thread_idx);
                 for (size_t j = 0; j < resultsAc.size(); ++j) {
                     size_t len = Matcher::resultToBuffer(buffer, resultsAc[j], true, true);
