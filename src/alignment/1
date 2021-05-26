@@ -283,9 +283,11 @@ s_align SmithWaterman::ssw_align (
     s_align alignment;
     // check if both query and target are profiles
     if (isQueryProfile && isTargetProfile) {
+//        std::cout << "profile-profile";
         alignment = ssw_align_private<SmithWaterman::PROFILE_PROFILE>(db_consens_sequence, db_mat, db_length, backtrace, gap_open,
                                                                        gap_extend, alignmentMode, evalueThr, evaluer, covMode, covThr, correlationScoreWeight, maskLen, id, true);
     } else if (isQueryProfile && !isTargetProfile) {
+//        std::cout << "aligning!";
         alignment = ssw_align_private<SmithWaterman::PROFILE_SEQ>(db_num_sequence, db_mat, db_length, backtrace, gap_open,
                                                                   gap_extend, alignmentMode, evalueThr, evaluer, covMode, covThr, correlationScoreWeight, maskLen, id,
                                                                  true);

@@ -230,7 +230,7 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                     Matcher::readAlignmentResults(resultsBc, resultBcReader.getData(bResId, thread_idx), false);
                 }
 
-                //std::stable_sort(resultsBc.begin(), resultsBc.end(), compareHitsByKeyScore);
+                //std::stablesort(resultsBc.begin(), resultsBc.end(), compareHitsByKeyScore);
 
                 for (size_t k = 0; k < resultsBc.size(); ++k) {
                     Matcher::result_t &resultBc = resultsBc[k];
@@ -258,23 +258,18 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                     } else {
                         size_t cSeqId = cReader->getId(cSeqKey);
                         cSeq.mapSequence(cSeqId, cSeqKey, cReader->getData(cSeqId, thread_idx), cReader->getSeqLen(cSeqId));
-                        rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
-                       // this should be INT_MIN in the case of slice search -> yields a better score
-//                       if (returnAlnRes) {
-//                           if (resultAc.score < INT_MIN) {
-//                               continue;
-//                           }
-//                       } else {
-//                           if (resultAc.score < -6) {
-//                               continue;
-//                           }
-//                       }
-                        if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
-                            continue;
-                        }
+                        //rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
+                        //if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
+                        //   continue;
+                        //}
 
                         if(par.expansionMode == Parameters::EXPAND_RESCORE_BACKTRACE){
-                            resultAc.eval = evaluer->computeEvalue(resultAc.score, aSeq.L);
+		 rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
+                            // alignment too bad (fitted on regression benchmark EXPAND)
+                            if (resultAc.score < -6) {
+                                continue;
+                            } 
+			   resultAc.eval = evaluer->computeEvalue(resultAc.score, aSeq.L);
                             resultAc.score = static_cast<int>(evaluer->computeBitScore(resultAc.score)+0.5);
                             resultAc.seqId = Util::computeSeqId(par.seqIdMode, resultAc.seqId, aSeq.L, cSeq.L, resultAc.backtrace.size());
                         }else{
