@@ -46,7 +46,6 @@ while [ $STEP -lt "$NUM_IT" ]; do
       $RUNNER "$MMSEQS" prefilter "$QUERYDB" "$TARGETDB" "$TMP_PATH/pref_tmp_$STEP" ${TMP} \
         || fail "Prefilter died"
     STEPPREV=$((STEP-1))
-    # shellcheck disable=SC2086
     "$MMSEQS" subtractdbs "$TMP_PATH/pref_tmp_$STEP" "$TMP_PATH/aln_$STEPPREV" "$TMP_PATH/pref_$STEP" $SUBTRACT_PAR \
       || fail "Subtract died"
     "$MMSEQS" rmdb "$TMP_PATH/pref_tmp_$STEP"
@@ -60,25 +59,20 @@ while [ $STEP -lt "$NUM_IT" ]; do
     STEPPREV=$((STEP-1))
     "$MMSEQS" mergedbs "$QUERYDB" "$TMP_PATH/aln_$STEP" "$TMP_PATH/aln_$STEPPREV" "$TMP_PATH/aln_tmp_$STEP" \
       || fail "Mergedbs died"
-    "$MMSEQS" rmdb "$TMP_PATH/aln_$STEPPREV"
-    "$MMSEQS" rmdb "$TMP_PATH/aln_tmp_$STEP"
+    #"$MMSEQS" rmdb "$TMP_PATH/aln_$STEPPREV"
+    #"$MMSEQS" rmdb "$TMP_PATH/aln_tmp_$STEP"
   fi
   # expand alignment dbs
-  # targetdb has to be a full set!
-  if [ $STEP -ne $((NUM_IT - 1)) ]; then
+  if [ $STEP -ne $(($NUM_IT - 1)) ]; then
+    #PARAM="EXPANDPROFILE_PAR_$STEP"
+    #eval TMP="\$$PARAM"
     # shellcheck disable=SC2086
-    "$MMSEQS" expand2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/profile_$STEP" $EXPANDPROFILE_PAR \
+    "$MMSEQS" expand2profile "$QUERYDB" /data2/hayden/db/fullset/uniref100.mmseqs "$TMP_PATH/aln_$STEP" /data2/martin/profileprofile/db/mmseqs/uniref100.noswipe.mmseqs.clu.aln "$TMP_PATH/profile_$STEP" $EXPANDPROFILE_PAR \
       || fail 'Expand2Profile died'
-#    # shellcheck disable=SC2086
-#    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$TMP_PATH/aln_expand_$STEP" $EXPANDALN_PAR \
-#      || fail 'Expandaln died'
-#    # shellcheck disable=SC2086
-#    "$MMSEQS" result2profile "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_expand_$STEP" "$TMP_PATH/profile_$STEP" $RESULT2PROFILE_PAR \
-#      || fail 'result2Profile died'
   else
 #    PARAM="EXPANDALN_PAR"
     # shellcheck disable=SC2086
-    "$MMSEQS" expandaln "$QUERYDB" "$TARGETDB" "$TMP_PATH/aln_$STEP" "$2_aln" "$3" $EXPANDALN \
+    "$MMSEQS" expandaln "$QUERYDB" /data2/hayden/db/fullset/uniref100.mmseqs "$TMP_PATH/aln_$STEP" /data2/martin/profileprofile/db/mmseqs/uniref100.noswipe.mmseqs.clu.aln "$3" $EXPANDALN_PAR \
       || fail "Expandaln died"
   fi
   QUERYDB="$TMP_PATH/profile_$STEP"
