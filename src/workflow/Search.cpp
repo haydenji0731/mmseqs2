@@ -359,30 +359,30 @@ int search(int argc, const char **argv, const Command& command) {
     } else if (((searchMode & Parameters::SEARCH_MODE_FLAG_TARGET_PROFILE) && (searchMode & Parameters::SEARCH_MODE_FLAG_QUERY_AMINOACID))
         && par.PARAM_NUM_ITERATIONS.wasSet){
         par.exhaustiveSearch = true;
+        par.addBacktrace = true;
         int originalNumIterations = par.numIterations;
         par.numIterations = 1;
-        // used to expand alignment results
-        par.addBacktrace = true;
-        cmd.addVariable("SEARCH_PAR", par.createParameterString(par.searchworkflow).c_str());
+        int originalEval = par.evalThr;
+        int originalPcmode = par.pcmode;
+        par.pcmode = 0;
+        cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
+        if (originalNumIterations == 1) {
+            cmd.addVariable("SEARCH_PAR", par.createParameterString(par.searchworkflow).c_str());
+        } else {
+            par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
+            cmd.addVariable("SEARCH_PAR", par.createParameterString(par.searchworkflow).c_str());
+        }
+        par.pcmode = originalPcmode;
+        cmd.addVariable("EXPANDPROFILE_PAR", par.createParameterString(par.expand2profile).c_str());
         par.numIterations = originalNumIterations;
         cmd.addVariable("NUM_IT", SSTR(par.numIterations).c_str());
-        cmd.addVariable("SUBTRACT_PAR", par.createParameterString(par.subtractdbs).c_str());
         cmd.addVariable("MERGE_PAR", par.createParameterString(par.mergedbs).c_str());
+        cmd.addVariable("SUBTRACT_PAR", par.createParameterString(par.subtractdbs).c_str());
         cmd.addVariable("VERBOSITY_PAR", par.createParameterString(par.onlyverbosity).c_str());
         cmd.addVariable("CONSENSUS_PAR", par.createParameterString(par.profile2seq).c_str());
-        cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
-        // only loads e-profile val; NOT e-val
-        par.pcmode = 0;
-        cmd.addVariable("EXPAND2PROFILE_PAR", par.createParameterString(par.result2profile).c_str());
-        int originalEval = par.evalThr;
-        par.evalThr = (par.evalThr < par.evalProfile) ? par.evalThr : par.evalProfile;
         for (int i = 1; i < par.numIterations; i++) {
-            // setting realign to false is good, good thing
             if (i == (par.numIterations - 1)) {
                 par.evalThr = originalEval;
-                // expandaln par to use on the last iteration (original eVal used; higher one)
-//                par.pcmode = 0;
-//                cmd.addVariable("EXPANDALN_PAR_LAST", par.createParameterString(par.expandaln).c_str());
             }
             cmd.addVariable(std::string("PREFILTER_PAR_" + SSTR(i)).c_str(),
                             par.createParameterString(par.prefilter).c_str());
