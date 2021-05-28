@@ -365,6 +365,7 @@ int search(int argc, const char **argv, const Command& command) {
         int originalEval = par.evalThr;
         int originalPcmode = par.pcmode;
         par.pcmode = 0;
+        //does expandaln's gap-open cost affect the score? -> NO!
         cmd.addVariable("EXPANDALN_PAR", par.createParameterString(par.expandaln).c_str());
         if (originalNumIterations == 1) {
             cmd.addVariable("SEARCH_PAR", par.createParameterString(par.searchworkflow).c_str());
