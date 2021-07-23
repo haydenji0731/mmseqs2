@@ -258,8 +258,17 @@ int expandaln(int argc, const char **argv, const Command& command, bool returnAl
                     } else {
                         size_t cSeqId = cReader->getId(cSeqKey);
                         cSeq.mapSequence(cSeqId, cSeqKey, cReader->getData(cSeqId, thread_idx), cReader->getSeqLen(cSeqId));
-                        //rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
-                        //if(resultAc.score < -6){ // alignment too bad (fitted on regression benchmark EXPAND)
+//                        rescoreResultByBacktrace(resultAc, aSeq, cSeq, subMat, compositionBias, par.gapOpen.values.aminoacid(), par.gapExtend.values.aminoacid());
+//                       if (returnAlnRes) {
+//                               if (resultAc.score < INT_MIN) { // alignment too bad (fitted on regression benchmark EXPAND)
+//                            continue;
+//                                }
+//                        } else {
+//                                if (resultAc.score < INT_MIN) { // alignment too bad (fitted on regression benchmark EXPAND)
+//                            continue;
+//                                }
+//                        }
+			//if(resultAc.score < INT_MIN){ // alignment too bad (fitted on regression benchmark EXPAND)
                         //   continue;
                         //}
 
